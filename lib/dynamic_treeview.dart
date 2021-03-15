@@ -267,9 +267,11 @@ class ParentWidget extends StatefulWidget {
 
 class _ParentWidgetState extends State<ParentWidget>
     with SingleTickerProviderStateMixin {
-  bool shouldExpand = false;
+  bool shouldExpand;
   Animation<double> sizeAnimation;
   AnimationController expandController;
+
+  ParentWidgetState({@required this.shouldExpand});
 
   @override
   void dispose() {
@@ -280,6 +282,9 @@ class _ParentWidgetState extends State<ParentWidget>
   @override
   void initState() {
     prepareAnimation();
+    if (shouldExpand) { 
+      expandController.forward();
+    }
     super.initState();
   }
 
@@ -311,22 +316,24 @@ class _ParentWidgetState extends State<ParentWidget>
           title: Text(widget.baseData.getTitle(),
               style: widget.config.parentTextStyle),
           contentPadding: widget.config.parentPaddingEdgeInsets,
-          trailing: IconButton(
-            onPressed: () {
-              setState(() {
-                shouldExpand = !shouldExpand;
-              });
-              if (shouldExpand) {
-                expandController.forward();
-              } else {
-                expandController.reverse();
-              }
-            },
-            icon: RotationTransition(
-              turns: sizeAnimation,
-              child: widget.config.arrowIcon,
-            ),
-          ),
+          trailing: trailing: (widget.children == null || widget.children.length == 0)
+              ? null
+              : IconButton(
+                  onPressed: () {
+                    setState(() {
+                      shouldExpand = !shouldExpand;
+                    });
+                    if (shouldExpand) {
+                      expandController.forward();
+                    } else {
+                      expandController.reverse();
+                    }
+                  },
+                  icon: RotationTransition(
+                    turns: sizeAnimation,
+                    child: widget.config.arrowIcon,
+                  ),
+                ),
         ),
         ChildWidget(
           children: widget.children,
@@ -382,6 +389,7 @@ class Config {
   final TextStyle childrenTextStyle;
   final EdgeInsets childrenPaddingEdgeInsets;
   final EdgeInsets parentPaddingEdgeInsets;
+  final bool expandAll;
 
   ///Animated icon when tile collapse/expand
   final Widget arrowIcon;
@@ -398,5 +406,6 @@ class Config {
       this.childrenPaddingEdgeInsets =
           const EdgeInsets.only(left: 15.0, top: 0, bottom: 0),
       this.rootId = "1",
+      this.expandAll = false,
       this.arrowIcon = const Icon(Icons.keyboard_arrow_down)});
 }
