@@ -49,14 +49,26 @@ class DynamicTreeView extends StatefulWidget {
 }
 
 class _DynamicTreeViewOriState extends State<DynamicTreeView> {
+  List<BaseData> data;
   List<ParentWidget> treeView;
   ChildTapListener _childTapListener = ChildTapListener(null);
 
   @override
   void initState() {
+    data = widget.data;
     _buildTreeView();
     _childTapListener.addListener(childTapListener);
     super.initState();
+  }
+
+  void didUpdateWidget(DynamicTreeView oldWidget) {
+  if (data != widget.data) {
+    setState(() {
+      data = widget.data;
+      _buildTreeView();
+    });
+  }
+  super.didUpdateWidget(oldWidget);
   }
 
   void childTapListener() {
