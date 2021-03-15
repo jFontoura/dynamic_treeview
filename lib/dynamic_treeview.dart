@@ -63,13 +63,13 @@ class _DynamicTreeViewOriState extends State<DynamicTreeView> {
 
   @override
   void didUpdateWidget(DynamicTreeView oldWidget) {
-  if (data != widget.data) {
-    setState(() {
-      data = widget.data;
-      _buildTreeView();
-    });
-  }
-  super.didUpdateWidget(oldWidget);
+    if (data != widget.data) {
+      setState(() {
+        data = widget.data;
+        _buildTreeView();
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   void childTapListener() {
@@ -295,7 +295,7 @@ class _ParentWidgetState extends State<ParentWidget>
   @override
   void initState() {
     prepareAnimation();
-    if (shouldExpand) { 
+    if (shouldExpand) {
       expandController.forward();
     }
     super.initState();
@@ -329,7 +329,7 @@ class _ParentWidgetState extends State<ParentWidget>
           title: Text(widget.baseData.getTitle(),
               style: widget.config.parentTextStyle),
           contentPadding: widget.config.parentPaddingEdgeInsets,
-          trailing: trailing: (widget.children == null || widget.children.length == 0)
+          trailing: (widget.children == null || widget.children.length == 0)
               ? null
               : IconButton(
                   onPressed: () {
