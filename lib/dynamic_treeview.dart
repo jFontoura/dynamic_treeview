@@ -146,6 +146,9 @@ class _DynamicTreeViewOriState extends State<DynamicTreeView> {
         cW.add(buildWidget(k.getId(), name));
       } else {
         cW.add(ListTile(
+          dense: true,
+          selected: widget.config.selectedId == k.getId(),
+          selectedTileColor: widget.config.selectedTileColor,
           onTap: () {
             widget?.onTap({
               'id': '${k.getId()}',
@@ -325,6 +328,9 @@ class _ParentWidgetState extends State<ParentWidget>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         ListTile(
+          selected: widget.config.selectedId == widget.baseData.getId(),
+          selectedTileColor: widget.config.selectedTileColor,
+          dense: true,
           onTap: () {
             var map = Map<String, dynamic>();
             map['id'] = widget.baseData.getId();
@@ -414,6 +420,7 @@ class Config {
   final TextStyle parentTextStyle;
   final TextStyle childrenTextStyle;
   final TextStyle selectedTextStyle;
+  final Color selectedTileColor;
   final EdgeInsets childrenPaddingEdgeInsets;
   final EdgeInsets parentPaddingEdgeInsets;
   final bool expandAll;
@@ -436,6 +443,7 @@ class Config {
           const EdgeInsets.only(left: 15.0, top: 0, bottom: 0),
       this.rootId = "1",
       this.selectedId = null,
+      this.selectedTileColor = null,
       this.expandAll = false,
       this.arrowIcon = const Icon(Icons.keyboard_arrow_down)});
 }
