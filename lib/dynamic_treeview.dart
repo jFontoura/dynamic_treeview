@@ -50,12 +50,14 @@ class DynamicTreeView extends StatefulWidget {
 
 class _DynamicTreeViewOriState extends State<DynamicTreeView> {
   List<BaseData> data;
+  Config config;
   List<ParentWidget> treeView;
   ChildTapListener _childTapListener = ChildTapListener(null);
 
   @override
   void initState() {
     data = widget.data;
+    config = widget.config;
     _buildTreeView();
     _childTapListener.addListener(childTapListener);
     super.initState();
@@ -63,9 +65,10 @@ class _DynamicTreeViewOriState extends State<DynamicTreeView> {
 
   @override
   void didUpdateWidget(DynamicTreeView oldWidget) {
-    if (data != widget.data) {
+    if (data != widget.data || config != widget.config) {
       setState(() {
         data = widget.data;
+        config = widget.config;
         _buildTreeView();
       });
     }
@@ -155,7 +158,10 @@ class _DynamicTreeViewOriState extends State<DynamicTreeView> {
           leading: icon != null ? icon : null,
           title: Text(
             "${k.getTitle()}",
-            style: widget.config.childrenTextStyle,
+            style: widget.config.selectedId == k.getId()
+                ? widget.config.selectedTextStyle ??
+                    widget.config.childrenTextStyle
+                : widget.config.childrenTextStyle,
           ),
         ));
       }
@@ -329,7 +335,10 @@ class _ParentWidgetState extends State<ParentWidget>
           },
           leading: icon != null ? icon : null,
           title: Text(widget.baseData.getTitle(),
-              style: widget.config.parentTextStyle),
+              style: widget.config.selectedId == widget.baseData.getId()
+                  ? widget.config.selectedTextStyle ??
+                      widget.config.parentTextStyle
+                  : widget.config.parentTextStyle),
           contentPadding: widget.config.parentPaddingEdgeInsets,
           trailing: (widget.children == null || widget.children.length == 0)
               ? null
@@ -404,6 +413,7 @@ abstract class BaseData {
 class Config {
   final TextStyle parentTextStyle;
   final TextStyle childrenTextStyle;
+  final TextStyle selectedTextStyle;
   final EdgeInsets childrenPaddingEdgeInsets;
   final EdgeInsets parentPaddingEdgeInsets;
   final bool expandAll;
@@ -414,15 +424,18 @@ class Config {
   ///the rootid of a treeview.This is needed to fetch all the immediate child of root
   ///Default is 1
   final String rootId;
+  final String selectedId;
 
   const Config(
       {this.parentTextStyle =
           const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
       this.parentPaddingEdgeInsets = const EdgeInsets.all(6.0),
       this.childrenTextStyle = const TextStyle(color: Colors.black),
+      this.selectedTextStyle = const TextStyle(color: Colors.black),
       this.childrenPaddingEdgeInsets =
           const EdgeInsets.only(left: 15.0, top: 0, bottom: 0),
       this.rootId = "1",
+      this.selectedId = null,
       this.expandAll = false,
       this.arrowIcon = const Icon(Icons.keyboard_arrow_down)});
 }
